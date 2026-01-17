@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S Voice</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="diamond">
+    <h1>S Voice Server</h1>
+
+    {% if message %}
+    <p class="success-message">{{ message }}</p>
+    {% endif %}
+
+    <h2>Enabled Tools</h2>
+    <form action="/dash/tools" method="post">
+        {% for tool_name, tool in tools.items() %}
+        <label>
+            <input type="checkbox" name="tools" value="{{ tool_name }}" {% if tool.enabled %}checked{% endif %}>
+            {{ tool.display_name }}
+        </label>
+        <br>
+        {% endfor %}
+        <br>
+        <input type="submit" value="Save">
+    </form>
+
+    <h2>Performance Profiler</h2>
+    <table class="stats-table">
+        <tr>
+            <td>Read Body</td>
+            <td>{% if stats and stats.read_body is defined %}{{ "%.3f"|format(stats.read_body) }}s{% else %}-{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Save Audio</td>
+            <td>{% if stats and stats.save_audio is defined %}{{ "%.3f"|format(stats.save_audio) }}s{% else %}-{% endif %}</td>
+        </tr>
+        <tr>
+            <td>FFmpeg Convert</td>
+            <td>{% if stats and stats.ffmpeg_convert is defined %}{{ "%.3f"|format(stats.ffmpeg_convert) }}s{% else %}-{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Whisper Transcribe</td>
+            <td>{% if stats and stats.whisper_transcribe is defined %}{{ "%.3f"|format(stats.whisper_transcribe) }}s{% else %}-{% endif %}</td>
+        </tr>
+        <tr>
+            <td>LLM Response</td>
+            <td>{% if stats and stats.llm_response is defined %}{{ "%.3f"|format(stats.llm_response) }}s{% else %}-{% endif %}</td>
+        </tr>
+        <tr>
+            <td>XML Generation</td>
+            <td>{% if stats and stats.xml_generation is defined %}{{ "%.3f"|format(stats.xml_generation) }}s{% else %}-{% endif %}</td>
+        </tr>
+        <tr class="stats-total">
+            <td><strong>Total</strong></td>
+            <td><strong>{% if stats and stats.total is defined %}{{ "%.3f"|format(stats.total) }}s{% else %}-{% endif %}</strong></td>
+        </tr>
+    </table>
+
+    <h2>Recent Queries</h2>
+    {% if recent_queries %}
+    <ol class="recent-queries">
+        {% for query in recent_queries %}
+        <li>{{ query }}</li>
+        {% endfor %}
+    </ol>
+    {% else %}
+    <p>No queries yet.</p>
+    {% endif %}
+
+    <h2>Conversations</h2>
+    {% if conversations %}
+    <div class="conversations">
+        {% for conv_id, messages in conversations.items() %}
+        <details class="conversation">
+            <summary>{{ conv_id[:8] }}... ({{ (messages|length) // 2 }} turns)</summary>
+            <div class="conv-messages">
+                {% for msg in messages %}
+                <div class="msg msg-{{ msg.role }}">
+                    {{ msg.content }}
+                </div>
+                {% endfor %}
+            </div>
+        </details>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No conversations yet.</p>
+    {% endif %}
+
+    <div class="breadcrumb">
+        <div class="breadcrumb-left">
+            <a href="https://nikolan.net">Made by Niko</a>
+        </div>
+        <div class="breadcrumb-right">
+            <p>S Voice Server</p>
+        </div>
+    </div>
+
+</body>
+</html>

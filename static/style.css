@@ -1,0 +1,273 @@
+:root {
+    --pattern-scale: 0.4;
+}
+
+body {
+    font-family: monospace;
+    color: white;
+    max-width: 650px;
+    margin: 0 auto;
+    padding-bottom: 80px;
+    padding: 15px;
+}
+
+/* https://codepen.io/matthewvisyak/pen/NrXXmg <3 */
+.diamond {
+    display: block;
+    position: relative;
+    background-color: rgba(30, 30, 30, 1);
+    background-image:
+
+    /*Masks*/
+    linear-gradient(144deg, rgba(30,30,30,1) calc(13px * var(--pattern-scale)), transparent calc(13.5px * var(--pattern-scale))),
+    linear-gradient(-34deg, rgba(30,30,30,1) calc(12.5px * var(--pattern-scale)), transparent calc(13px * var(--pattern-scale))),
+
+    /*Forward slant Angled Diamond Upper Half*/
+    linear-gradient(132deg, rgba(60,60,60, 1) calc(13px * var(--pattern-scale)), transparent calc(13.5px * var(--pattern-scale))),
+    linear-gradient(128deg, rgba(45,45,45, 0.7) calc(13px * var(--pattern-scale)), transparent calc(13.5px * var(--pattern-scale))),
+
+    /*Forward slant Angled Diamond Lower Half*/
+    linear-gradient(-41deg, rgba(45,45,45, 1) calc(13.5px * var(--pattern-scale)), transparent calc(14px * var(--pattern-scale))),
+    linear-gradient(-52deg, rgba(60,60,60, 1) calc(13.5px * var(--pattern-scale)), transparent calc(14px * var(--pattern-scale))),
+
+    /*Masks*/
+    linear-gradient(-125deg, rgba(30,30,30,1) calc(13px * var(--pattern-scale)), transparent calc(13.5px * var(--pattern-scale))),
+    linear-gradient(55deg, rgba(30,30,30,1) calc(12.5px * var(--pattern-scale)), transparent calc(13px * var(--pattern-scale))),
+
+    /*Backward Slant Angled Diamond Lower Half*/
+    linear-gradient(-132deg, rgba(45,45,45, 1) calc(13px * var(--pattern-scale)), transparent calc(13.5px * var(--pattern-scale))),
+    linear-gradient(-141deg, rgba(60,60,60, 1) calc(13px * var(--pattern-scale)), transparent calc(13.5px * var(--pattern-scale))),
+
+    /*Backward Slant Angled Diamond Upper Half*/
+    linear-gradient(42deg, rgba(60,60,60, 1) calc(13.5px * var(--pattern-scale)), transparent calc(14px * var(--pattern-scale))),
+    linear-gradient(38deg, rgba(45,45,45, 0.5) calc(13.5px * var(--pattern-scale)), transparent calc(14px * var(--pattern-scale)))
+
+    ;
+
+    background-size:
+    calc(50px * var(--pattern-scale)) calc(50px * var(--pattern-scale));
+    
+    background-position:
+    calc(-8px * var(--pattern-scale)) calc(4.5px * var(--pattern-scale)), calc(-6.5px * var(--pattern-scale)) calc(-5.5px * var(--pattern-scale)),
+    calc(-6.5px * var(--pattern-scale)) calc(6.5px * var(--pattern-scale)), calc(-6.5px * var(--pattern-scale)) calc(8px * var(--pattern-scale)),
+    calc(-6.5px * var(--pattern-scale)) calc(-5.5px * var(--pattern-scale)), calc(-6.5px * var(--pattern-scale)) calc(-8px * var(--pattern-scale)),
+    calc(-11.5px * var(--pattern-scale)) calc(-0.5px * var(--pattern-scale)), calc(-1.5px * var(--pattern-scale)) calc(-0.5px * var(--pattern-scale)), 
+    calc(-13px * var(--pattern-scale)) calc(-0.5px * var(--pattern-scale)), calc(-15px * var(--pattern-scale)) calc(-0.5px * var(--pattern-scale)),
+    calc(-1px * var(--pattern-scale)) calc(-0.5px * var(--pattern-scale)), calc(0.5px * var(--pattern-scale)) calc(-0.5px * var(--pattern-scale))
+    ;
+
+    background-repeat:repeat;
+    min-height: 100vh;
+}
+
+.breadcrumb {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAATCAYAAABRC2cZAAAACXBIWXMAAAsTAAALEwEAmpwYAAAALUlEQVQImWMwt7T5z/SfgYGBieH/fwYI6z+C9Q/MAhH/4RKoBANCAq6OAcYCADa2J6k5XFNIAAAAAElFTkSuQmCC");
+    bottom: 0px;
+    font-size: 10px;
+    height: 15px;
+    left: 0px;
+    right: 0px;
+    padding: 3px 10px 0px 30px;
+    position: fixed;
+    z-index: 901;
+    overflow: visible;
+    border-top: 1px solid rgb(36, 37, 41);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    color: aliceblue;
+}
+
+.breadcrumb-left {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+}
+
+.breadcrumb-right {
+    overflow: visible;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: right;
+    padding-right: 20px;
+}
+
+.breadcrumb-left a {
+    color: lightblue;
+    text-decoration: none;
+}
+
+.breadcrumb-right p {
+    margin: 0;
+}
+
+.success-message {
+    color: #4ade80;
+}
+
+/* Stats Table */
+.stats-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #444;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.stats-table td {
+    padding: 6px 12px;
+}
+
+.stats-table td:first-child {
+    color: #cccccc;
+}
+
+.stats-table td:last-child {
+    text-align: right;
+    font-family: monospace;
+}
+
+.stats-table .stats-total {
+    background: rgba(59, 112, 246, 0.049);
+}
+
+.stats-table .stats-total td {
+    border-top: 1px solid #666;
+}
+
+/* Recent Queries */
+ul, ol.recent-queries {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #444;
+    border-radius: 8px;
+}
+
+ol.recent-queries {
+    list-style: decimal;
+    list-style-position: inside;
+    padding-left: 0;
+}
+
+ol.recent-queries li::marker {
+    color: #666;
+}
+
+ul li, ol.recent-queries li {
+    padding: 8px 12px;
+    border-bottom: 1px solid #333;
+}
+
+ul li:last-child, ol.recent-queries li:last-child {
+    border-bottom: none;
+}
+
+/* Conversations */
+.conversations {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.conversation {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 10px 12px;
+}
+
+.conversation summary {
+    cursor: pointer;
+    color: #ccc;
+}
+
+.conversation summary:hover {
+    color: white;
+}
+
+.conv-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #333;
+}
+
+.msg {
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    max-width: 85%;
+}
+
+.msg-user {
+    background: #3b82f6;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+}
+
+.msg-assistant {
+    background: #374151;
+    color: #e5e7eb;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+}
+
+.msg-tool {
+    background: #7c3aed;
+    color: white;
+    align-self: center;
+    font-family: monospace;
+    font-size: 12px;
+    padding: 6px 10px;
+}
+
+/* Checkboxes */
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #444;
+    border-radius: 4px;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+input[type="checkbox"]:checked {
+    background: #3b82f6;
+    border-color: #3b82f6;
+}
+
+input[type="checkbox"]:checked::after {
+    content: '✓';
+    display: block;
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    line-height: 16px;
+}
+
+input[type="submit"] {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: white;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: monospace;
+}
+
+input[type="submit"]:hover {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: #3b82f6;
+}
