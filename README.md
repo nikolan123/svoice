@@ -9,6 +9,7 @@ A custom server for S Voice that makes it work again locally. Works with S Voice
     <li>11.2.2.0.37791 (r1) on Note 3 (N9005)</li>
     <li>11.2.2.0.32948 (r1) on S3 Mini (I8200)</li>
     <li>11.2.2.0.32564 (r1) on S3 Neo (I9301I)</li>
+    <li>11.2.2.0.33209 (r1) on S4 Mini (i9195)</li>
   </ul>
 </details>
 
@@ -83,3 +84,4 @@ Now we need to set up the S Voice server itself
 - The first start may take a while as it needs to download and load the Whisper model
 - If everything is set up correctly, you should see `Application startup complete.`
 - Visit http://localhost:5067/dash (or your configured port) to access the dashboard
+
