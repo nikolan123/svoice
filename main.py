@@ -261,6 +261,8 @@ async def asr_endpoint(request: Request):
     response_text, tool_calls = await ai_response(transcription, history)
     stats["llm_response"] = time.perf_counter() - t0
 
+    logger.info(f"AI tool_calls: {tool_calls}")
+
     t0 = time.perf_counter()
 
     # Determine the response text for history storage
