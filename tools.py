@@ -2,6 +2,8 @@ AVAILABLE_TOOLS = {
     "open_app": {
         "enabled": True,
         "display_name": "Open App",
+        "example": "Hi Galaxy, open camera",
+        "web_description": "Launches any application on your device",
         "definition": {
             "type": "function",
             "function": {
@@ -23,6 +25,8 @@ AVAILABLE_TOOLS = {
     "set_timer": {
         "enabled": True,
         "display_name": "Set Timer",
+        "example": "Hi Galaxy, set a timer for 5 minutes",
+        "web_description": "Creates a countdown timer for any duration",
         "definition": {
             "type": "function",
             "function": {
@@ -45,6 +49,8 @@ AVAILABLE_TOOLS = {
     "change_setting": {
         "enabled": True,
         "display_name": "Change Setting",
+        "example": "Hi Galaxy, turn on WiFi",
+        "web_description": "Controls device settings like WiFi, Bluetooth, and Driving Mode",
         "definition": {
             "type": "function",
             "function": {
@@ -72,6 +78,8 @@ AVAILABLE_TOOLS = {
     "record_voice": {
         "enabled": True,
         "display_name": "Record Voice",
+        "example": "Hi Galaxy, start a voice recording",
+        "web_description": "Starts the voice recorder to capture audio notes",
         "definition": {
             "type": "function",
             "function": {
@@ -93,6 +101,8 @@ AVAILABLE_TOOLS = {
     "web_search": {
         "enabled": True,
         "display_name": "Web Search",
+        "example": "Hi Galaxy, search for pasta recipes",
+        "web_description": "Opens browser and searches the web for information",
         "definition": {
             "type": "function",
             "function": {
@@ -114,6 +124,8 @@ AVAILABLE_TOOLS = {
     "web_search_prompt": {
         "enabled": True,
         "display_name": "Web Search Prompt",
+        "example": "...",
+        "web_description": "Shows a button to search your query on Google when the assistant doesn't know the answer",
         "definition": {
             "type": "function",
             "function": {
@@ -130,6 +142,8 @@ AVAILABLE_TOOLS = {
     "play_music": {
         "enabled": True,
         "display_name": "Music Control",
+        "example": "Hi Galaxy, pause the music / Hi Galaxy, play Destroy the Obvious",
+        "web_description": "Controls music playback or plays specific songs, albums, or artists",
         "definition": {
             "type": "function",
             "function": {
@@ -156,6 +170,8 @@ AVAILABLE_TOOLS = {
     "chatbot_sing": {
         "enabled": False,
         "display_name": "Chatbot Sing",
+        "example": "Hi Galaxy, sing me a song",
+        "web_description": "Makes the assistant sing goofy audio",
         "definition": {
             "type": "function",
             "function": {
