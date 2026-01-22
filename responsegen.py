@@ -156,6 +156,14 @@ class SVoiceResponse:
 
         return self
 
+    def add_chatbot_sing(self) -> 'SVoiceResponse':
+        """Add ChatbotSing action to make S-Voice sing"""
+        self.actions.append({
+            "name": "ChatbotSing",
+            "params": {}
+        })
+        return self
+
     def generate_xml(self) -> str:
         """Generate the final XML response"""
         # idk what this does
@@ -284,4 +292,11 @@ def generate_play_music_response(user_text: str, play_type: str = "PLAY", name: 
     return (SVoiceResponse(user_text, dialog_state)
             .add_user_turn()
             .add_play_music(play_type, name)
+            .generate_xml())
+
+def generate_chatbot_sing_response(user_text: str, dialog_state: dict = None) -> str:
+    """Generate XML response for ChatbotSing"""
+    return (SVoiceResponse(user_text, dialog_state)
+            .add_user_turn()
+            .add_chatbot_sing()
             .generate_xml())

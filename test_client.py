@@ -108,6 +108,8 @@ class SVoiceClient:
                     lines.append(f"Music: {params.get('IntentName', '').split('.')[-1]}")
                 elif name.startswith("ShowPlay"):
                     lines.append(f"Play {params.get('Type', '')}: {params.get('Query', '')}")
+                elif name == "ChatbotSing":
+                    lines.append("S-Voice is singing")
                 else:
                     lines.append(f"{name}")
 

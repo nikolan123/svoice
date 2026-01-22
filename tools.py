@@ -152,6 +152,22 @@ AVAILABLE_TOOLS = {
                 }
             }
         }
+    },
+    "chatbot_sing": {
+        "enabled": False,
+        "display_name": "Chatbot Sing",
+        "definition": {
+            "type": "function",
+            "function": {
+                "name": "chatbot_sing",
+                "description": "Make the assistant sing by playing a random musical audio clip. Use when user asks S-Voice to sing, or show off its singing ability.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                }
+            }
+        }
     }
 }
 
@@ -181,5 +197,7 @@ def get_tools_description() -> str:
             descriptions.append("web_search_prompt (gives the user a button to click that searches your prompt on google)")
         elif name == "play_music":
             descriptions.append("play_music (PLAY/PAUSE/NEXT/PREVIOUS or TITLE/ALBUM/ARTIST/PLAYLIST with name)")
+        elif name == "chatbot_sing":
+            descriptions.append("chatbot_sing (makes assistant sing)")
 
     return f"Available tools: {', '.join(descriptions)}." if descriptions else "No tools available."
