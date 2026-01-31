@@ -89,3 +89,6 @@ Now we need to set up the S Voice server itself
 - If everything is set up correctly, you should see `Application startup complete.`
 - Visit http://localhost:5067/dash (or your configured port) to access the dashboard
 
+## Credits
+
+This project includes [Holo Web](http://holo.zmyaro.com/) by Zachary Yaro, licensed under the MIT License.

@@ -4,10 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>S Voice</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" type="image/webp" href="/static/svoice.webp">
+    <link rel="stylesheet" href="/static/holo-base-elements.css">
+    <link rel="stylesheet" href="/static/holo-ics-dark-elements.css">
+    <link rel="stylesheet" href="/static/holo-ics-light-elements.css" media="(prefers-color-scheme: light)">
+    <link rel="stylesheet" href="/static/holo-base-widgets.css">
+    <link rel="stylesheet" href="/static/holo-ics-dark-widgets.css">
+    <link rel="stylesheet" href="/static/holo-ics-light-widgets.css" media="(prefers-color-scheme: light)">
+    <link rel="stylesheet" href="/static/chat.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Varela&display=swap" rel="stylesheet">
 </head>
-<body class="diamond">
-    <h1>S Voice Server</h1>
+<body>
+    <header class="holo-actionBar">
+        <span class="holo-title" role="heading" aria-level="1">
+            <img src="/static/svoice.webp" />
+            S Voice Server
+        </span>
+        <button style="float:right;" onclick="window.open('https://nikolan.net', '_blank')">Made by Niko</button>
+        <button style="float:right;" onclick="window.open('https://github.com/nikolan123/svoice', '_blank')">GitHub Repo</button>
+    </header>
 
     {% if message %}
     <p class="success-message">{{ message }}</p>
@@ -60,21 +75,12 @@
         </tr>
     </table>
 
-    <h2>Recent Queries</h2>
-    {% if recent_queries %}
-    <ol class="recent-queries">
-        {% for query in recent_queries %}
-        <li>{{ query }}</li>
-        {% endfor %}
-    </ol>
-    {% else %}
-    <p>No queries yet.</p>
-    {% endif %}
-
     <h2>Conversations</h2>
     {% if conversations %}
     <div class="conversations">
+        <ul class="holo-list">
         {% for conv_id, messages in conversations.items() %}
+        <li>
         <details class="conversation">
             <summary>{{ conv_id[:8] }}... ({{ (messages|length) // 2 }} turns)</summary>
             <div class="conv-messages">
@@ -85,20 +91,32 @@
                 {% endfor %}
             </div>
         </details>
+        </li>
         {% endfor %}
+        </ul>
     </div>
     {% else %}
     <p>No conversations yet.</p>
     {% endif %}
 
-    <div class="breadcrumb">
-        <div class="breadcrumb-left">
-            <a href="https://nikolan.net">Made by Niko</a>
-        </div>
-        <div class="breadcrumb-right">
-            <p>S Voice Server</p>
-        </div>
-    </div>
+    <h2>Recent Queries</h2>
+    {% if recent_queries %}
+    <ol class="holo-list">
+        {% for query in recent_queries %}
+        <li>{{ query }}</li>
+        {% endfor %}
+    </ol>
+    {% else %}
+    <p>No queries yet.</p>
+    {% endif %}
+
+    <script>
+        document.addEventListener('touchstart', e => {
+            if (!e.target.closest('.tool-label')) {
+                document.querySelectorAll('.tool-label').forEach(l => l.blur());
+            }
+        });
+    </script>
 
 </body>
 </html>

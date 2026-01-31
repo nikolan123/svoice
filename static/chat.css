@@ -1,0 +1,237 @@
+/* Conversations */
+.conversations {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.conversation summary {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent !important;
+    outline-style: none;
+    outline-width: 0px;
+    display: block;
+    margin: -16px;
+    padding: 16px;
+    font-family: inherit;
+    font-size: inherit;
+    text-align: left;
+    border: 0 none;
+    -webkit-border-radius: 0;
+       -moz-border-radius: 0;
+            border-radius: 0;
+    background: transparent none;
+    -webkit-box-shadow: none;
+       -moz-box-shadow: none;
+            box-shadow: none;
+}
+
+.conversation summary:active {
+    background-color: #1E6C89;
+    background-color: rgba(51, 181, 229, 0.6);
+    -webkit-box-shadow: none;
+       -moz-box-shadow: none;
+            box-shadow: none;
+}
+
+.conversation summary:active ~ .conv-messages {
+    border-top-color: transparent;
+}
+
+.conv-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #333;
+}
+
+/* Dashboard specific styles */
+html {
+    font-family: "Roboto", sans-serif;
+    overscroll-behavior: none;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: "Roboto", sans-serif;
+    overflow-x: hidden;
+}
+
+h2 {
+    text-transform: uppercase;
+    font-size: 90%;
+    margin: 0;
+    padding: 4px 8px;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #262626;
+    border-bottom-color: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.75);
+    margin-top: 20px;
+}
+
+@media (prefers-color-scheme: light) {
+    h2 {
+        color: rgba(0, 0, 0, 0.75);
+        border-bottom-color: rgba(0, 0, 0, 0.15);
+    }
+}
+
+/* Checkbox alignment fix */
+input[type="checkbox"] {
+    margin: 0;
+    vertical-align: middle;
+}
+
+label {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin: 5px;
+}
+
+/* Remove excessive margin from submit button */
+input[type="submit"] {
+    margin: 0 6px;
+}
+
+/* Center empty state messages */
+p {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+@media (prefers-color-scheme: light) {
+    p {
+        color: rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* Performance profiler table */
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.stats-table tr {
+    border-bottom: 1px solid #262626;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.stats-table tr:last-child {
+    border-bottom: none;
+}
+
+.stats-table td {
+    padding: 12px 8px;
+}
+
+.stats-table td:first-child {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.stats-table td:last-child {
+    text-align: right;
+    font-family: 'Droid Sans Mono', 'Roboto Mono', monospace;
+    color: #33B5E5;
+}
+
+.stats-table .stats-total td {
+    border-top: 2px solid #33B5E5;
+    padding-top: 12px;
+    font-weight: bold;
+}
+
+@media (prefers-color-scheme: light) {
+    .stats-table tr {
+        border-bottom-color: rgba(0, 0, 0, 0.15);
+    }
+    
+    .stats-table td:first-child {
+        color: rgba(0, 0, 0, 0.75);
+    }
+}
+
+/* Tool label hover tooltip */
+.tool-label {
+    position: relative;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.tool-label:hover {
+    color: #33B5E5;
+}
+
+.tool-label:focus-within {
+    outline: none;
+}
+
+.tool-label[data-example]:hover::after,
+.tool-label[data-example]:focus-within::after {
+    content: '"' attr(data-example) '"\A\A' attr(data-description);
+    white-space: pre-wrap;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    margin-top: 8px;
+    padding: 12px 14px;
+    background: #000;
+    border: 1px solid #33B5E5;
+    border-radius: 1px;
+    color: #fff;
+    font-size: 13px;
+    line-height: 1.5;
+    max-width: 320px;
+    min-width: 250px;
+    z-index: 1000;
+    box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+}
+
+@keyframes tooltipFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.msg {
+    padding: 8px 12px;
+    border-radius: 1px;
+    font-size: 13px;
+    max-width: 85%;
+    border: 1px solid transparent;
+    box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.2);
+}
+
+.msg-user {
+    background: #33B5E5;
+    color: #000;
+    align-self: flex-end;
+    border-color: #33B5E5;
+}
+
+.msg-assistant {
+    background: #222;
+    color: #fff;
+    align-self: flex-start;
+    border-color: #444;
+}
+
+.msg-tool {
+    background: #AA66CC;
+    color: #fff;
+    align-self: center;
+    font-family: 'Droid Sans Mono', 'Roboto Mono', monospace;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-color: #AA66CC;
+}
