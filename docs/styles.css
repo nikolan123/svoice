@@ -131,6 +131,24 @@ main {
     margin-top: 4px;
 }
 
+/* Screenshots */
+.screenshots {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding-bottom: 24px;
+}
+
+.screenshot {
+    width: 200px;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid #1a1a1a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    display: block;
+}
+
 /* CTA Section */
 .cta-section {
     display: flex;
