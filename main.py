@@ -23,7 +23,8 @@ from responsegen import (
     generate_record_voice_response,
     generate_web_search_response,
     generate_web_search_prompt_response,
-    generate_play_music_response
+    generate_play_music_response,
+    generate_chatbot_sing_response
 )
 from tools import AVAILABLE_TOOLS, get_enabled_tools, get_tools_description
 from multipart import extract_dialog_state, extract_audio_data, extract_text
@@ -260,6 +261,8 @@ async def asr_endpoint(request: Request):
     response_text, tool_calls = await ai_response(transcription, history)
     stats["llm_response"] = time.perf_counter() - t0
 
+    logger.info(f"AI tool_calls: {tool_calls}")
+
     t0 = time.perf_counter()
 
     # Determine the response text for history storage
@@ -322,6 +325,12 @@ async def asr_endpoint(request: Request):
                 xml = generate_play_music_response(transcription, play_type, name, new_dialog_state)
                 final_response_text = f"Music: {play_type}" + (f" {name}" if name else "")
                 tool_used = f"play_music({play_type}" + (f", {name})" if name else ")")
+                break
+            elif tool_call["function"]["name"] == "chatbot_sing":
+                logger.info("AI requested ChatbotSing")
+                xml = generate_chatbot_sing_response(transcription, new_dialog_state)
+                final_response_text = "Singing"
+                tool_used = "chatbot_sing()"
                 break
         else:
             # No recognized tool calls, generate regular response

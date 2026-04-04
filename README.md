@@ -2,6 +2,11 @@
 
 A custom server for S Voice that makes it work again locally. Works with S Voice versions that shipped until Android 5, tested with 11.2.2.0.x.
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/870095ea-9a97-4262-a512-8d1a309bc969" width="200" />
+  <img src="https://github.com/user-attachments/assets/3eb900c1-e1bf-4c35-bbcc-ac9c68832432" width="200" />
+</p>
+
 <details>
   <summary>All tested versions</summary>
   <ul>
@@ -84,5 +89,4 @@ Now we need to set up the S Voice server itself
 - The first start may take a while as it needs to download and load the Whisper model
 - If everything is set up correctly, you should see `Application startup complete.`
 - Visit http://localhost:5067/dash (or your configured port) to access the dashboard
-
-
+- 

@@ -16,9 +16,11 @@
     <h2>Enabled Tools</h2>
     <form action="/dash/tools" method="post">
         {% for tool_name, tool in tools.items() %}
-        <label>
+        <label class="tool-label" 
+               data-example="{{ tool.example }}" 
+               data-description="{{ tool.web_description }}">
             <input type="checkbox" name="tools" value="{{ tool_name }}" {% if tool.enabled %}checked{% endif %}>
-            {{ tool.display_name }}
+            <span class="tool-name">{{ tool.display_name }}</span>
         </label>
         <br>
         {% endfor %}
