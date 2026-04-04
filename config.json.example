@@ -24,5 +24,6 @@
     "whisper_language": "en",
     "conversation_timeout_minutes": 30,
     "ffmpeg_path": "ffmpeg"
-  }
+  },
+  "demo_mode": true
 }

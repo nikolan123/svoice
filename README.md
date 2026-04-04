@@ -1,5 +1,8 @@
 # S Voice Server
 
+> [!WARNING]
+> You are on the outdated Demo branch used for getting nice screenshots
+
 A custom server for S Voice that makes it work again locally. Works with S Voice versions that shipped until Android 5, tested with 11.2.2.0.x.
 
 <p align="center">

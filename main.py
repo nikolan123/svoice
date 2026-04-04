@@ -60,14 +60,26 @@ else:
     raise ValueError(f"Unknown API provider: {api_provider}. Use 'ollama' or 'openai'")
 
 recent_queries = deque(maxlen=10) # for web ui logging
+recent_transcriptions = deque(maxlen=20)  # Store recent transcriptions with metadata
 last_request_stats = None  # timing stats for last request
 MAX_HISTORY_MESSAGES = config["options"]["max_history_messages"]
 KEEP_AUDIO_FILES = config["options"]["keep_audio_files"]
 WHISPER_LANGUAGE = config["options"]["whisper_language"]
 CONVERSATION_TIMEOUT_MINUTES = config["options"]["conversation_timeout_minutes"]
 FFMPEG_PATH = config["options"].get("ffmpeg_path", "ffmpeg")
+DEMO_MODE = config.get("demo_mode", False)
 conversation_history = {}
 conversation_last_access = {}  # last access time for each conversation
+
+# Demo conversation script
+DEMO_SCRIPT = [
+    {"user": "Hello.", "response": "Hello! How can I assist you today?", "tool": None},
+    {"user": "Turn Bluetooth off.", "response": "Turning Bluetooth off", "tool": {"name": "change_setting", "args": {"setting_name": "bluetooth", "state": "off"}}},
+    {"user": "Set a timer for 5 minutes.", "response": "Setting timer for 5 minutes", "tool": {"name": "set_timer", "args": {"canonical_time": "+00:05:00"}}},
+    {"user": "What did I just ask you to do?", "response": "You asked me to set a 5-minute timer. I have done that for you.", "tool": None},
+    {"user": "What date is it?", "response": "Today's date is April 4, 2026", "tool": None}
+]
+demo_conversation_step = {}
 
 
 async def transcribe_audio(audio_data: bytes) -> tuple[str, dict]:
@@ -277,7 +289,7 @@ templates = Jinja2Templates(directory="templates")
 
 @app.post("/voicepad/sr")
 async def asr_endpoint(request: Request):
-    global last_request_stats
+    global last_request_stats, demo_conversation_step
     stats = {}
 
     logger.info("POST /voicepad/sr")
@@ -285,11 +297,6 @@ async def asr_endpoint(request: Request):
     t0 = time.perf_counter()
     body = await request.body()
     stats["read_body"] = time.perf_counter() - t0
-
-    # # save raw request
-    # timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    # with open(f"sr_{timestamp}.bin", 'wb') as f:
-    #     f.write(body)
 
     # Extract dialog state
     dialog_state = extract_dialog_state(body)
@@ -302,6 +309,86 @@ async def asr_endpoint(request: Request):
     conv_id, history = get_or_create_conversation(dialog_state)
     logger.info("Conversation: %s (history: %d messages)", conv_id[:8], len(history))
 
+    # DEMO MODE: Use scripted responses
+    if DEMO_MODE:
+        # Use a fixed demo conversation ID
+        demo_conv_id = "demo-conversation-fixed"
+        
+        # Get current step for demo (ignore actual conv_id)
+        step = demo_conversation_step.get(demo_conv_id, 0)
+        
+        if step < len(DEMO_SCRIPT):
+            script_item = DEMO_SCRIPT[step]
+            transcription = script_item["user"]
+            response_text = script_item["response"]
+            tool_info = script_item["tool"]
+            
+            logger.info(f"[DEMO MODE] Step {step}: '{transcription}' -> '{response_text}'")
+            
+            # Increment step for next request
+            demo_conversation_step[demo_conv_id] = step + 1
+            
+            # Build dialog state with demo conv id
+            turn = step + 1
+            new_dialog_state = {"turn": turn, "conversation_id": demo_conv_id}
+            
+            # Generate appropriate response based on tool
+            if tool_info:
+                if tool_info["name"] == "change_setting":
+                    xml = generate_setting_change_response(
+                        transcription,
+                        tool_info["args"]["setting_name"],
+                        tool_info["args"]["state"],
+                        new_dialog_state
+                    )
+                    tool_used = f"change_setting({tool_info['args']['setting_name']}, {tool_info['args']['state']})"
+                elif tool_info["name"] == "set_timer":
+                    xml = generate_set_timer_response(
+                        transcription,
+                        tool_info["args"]["canonical_time"],
+                        new_dialog_state
+                    )
+                    tool_used = f"set_timer({tool_info['args']['canonical_time']})"
+                else:
+                    xml = generate_regular_response(transcription, response_text, new_dialog_state)
+                    tool_used = None
+            else:
+                xml = generate_regular_response(transcription, response_text, new_dialog_state)
+                tool_used = None
+            
+            # Store in conversation history with demo conv id
+            add_to_conversation(demo_conv_id, transcription, response_text, tool_used)
+            
+            # Add to recent queries
+            recent_queries.append(transcription)
+            recent_transcriptions.append({
+                "id": len(recent_transcriptions),
+                "timestamp": datetime.now().isoformat(),
+                "transcription": transcription,
+                "audio_file": None
+            })
+            
+            # Mock stats
+            stats = {
+                "read_body": 0.002,
+                "save_audio": 0.001,
+                "ffmpeg_convert": 0.150,
+                "whisper_transcribe": 0.320,
+                "llm_response": 0.450,
+                "xml_generation": 0.003,
+                "total": 0.926
+            }
+            last_request_stats = stats
+            
+            xml = xml.replace('\n', '')
+            logger.info(f"Full Response XML: {xml}")
+            return Response(content=xml, media_type="text/xml")
+        else:
+            # Demo script finished, reset
+            demo_conversation_step[demo_conv_id] = 0
+            logger.info("[DEMO MODE] Script finished, resetting")
+
+    # NORMAL MODE: Continue with regular processing
     # Try audio first, then text
     audio_data = extract_audio_data(body)
     transcription, audio_stats = await transcribe_audio(audio_data)
@@ -423,12 +510,65 @@ async def asr_endpoint(request: Request):
 @app.get("/dash")
 async def dashboard(request: Request):
     """Render the dashboard page."""
+    demo_mode = request.query_params.get("demo") == "1"
+    
+    if demo_mode:
+        # Scripted demo conversation
+        demo_conversations = {
+            "demo-conv-001": [
+                {"role": "user", "content": "hello"},
+                {"role": "assistant", "content": "Hello! How can I assist you today?"},
+                {"role": "user", "content": "turn bluetooth off"},
+                {"role": "tool", "content": "change_setting(bluetooth, off)"},
+                {"role": "assistant", "content": "Turning Bluetooth off"},
+                {"role": "user", "content": "set a timer for 5 minutes"},
+                {"role": "tool", "content": "set_timer(+00:05:00)"},
+                {"role": "assistant", "content": "Setting timer for 5 minutes"},
+                {"role": "user", "content": "what did i just ask you to do?"},
+                {"role": "assistant", "content": "You asked me to set a 5-minute timer. I have done that for you."},
+                {"role": "user", "content": "what date is it?"},
+                {"role": "assistant", "content": "Today's date is April 4, 2026"}
+            ]
+        }
+        demo_queries = ["hello", "turn bluetooth off", "set a timer for 5 minutes", "what did i just ask you to do?", "what date is it?"]
+        demo_transcriptions = [
+            {"id": 0, "timestamp": "2026-04-04T10:30:00", "transcription": "hello", "audio_file": None},
+            {"id": 1, "timestamp": "2026-04-04T10:30:15", "transcription": "turn bluetooth off", "audio_file": None},
+            {"id": 2, "timestamp": "2026-04-04T10:30:30", "transcription": "set a timer for 5 minutes", "audio_file": None},
+            {"id": 3, "timestamp": "2026-04-04T10:30:45", "transcription": "what did i just ask you to do?", "audio_file": None},
+            {"id": 4, "timestamp": "2026-04-04T10:31:00", "transcription": "what date is it?", "audio_file": None}
+        ]
+        demo_stats = {
+            "read_body": 0.002,
+            "save_audio": 0.001,
+            "ffmpeg_convert": 0.150,
+            "whisper_transcribe": 0.320,
+            "llm_response": 0.450,
+            "xml_generation": 0.003,
+            "total": 0.926
+        }
+        
+        return templates.TemplateResponse("dashboard.html", {
+            "request": request,
+            "tools": AVAILABLE_TOOLS,
+            "recent_queries": list(reversed(demo_queries)),
+            "recent_transcriptions": list(reversed(demo_transcriptions)),
+            "stats": demo_stats,
+            "conversations": demo_conversations,
+            "examples": few_shot_examples,
+            "corrections": corrections_data.get("corrections", []),
+            "demo_mode": True
+        })
+    
     return templates.TemplateResponse("dashboard.html", {
         "request": request,
         "tools": AVAILABLE_TOOLS,
         "recent_queries": list(reversed(recent_queries)),
+        "recent_transcriptions": list(reversed(recent_transcriptions)),
         "stats": last_request_stats,
-        "conversations": conversation_history
+        "conversations": conversation_history,
+        "examples": few_shot_examples,
+        "corrections": corrections_data.get("corrections", [])
     })
 
 @app.post("/dash/tools")
