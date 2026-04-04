@@ -100,4 +100,3 @@ Now we need to set up the S Voice server itself
 - The first start may take a while as it needs to download and load the Whisper model
 - If everything is set up correctly, you should see `Application startup complete.`
 - Visit http://localhost:5067/dash (or your configured port) to access the dashboard
-- 
