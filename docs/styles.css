@@ -1,0 +1,244 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: #1a1a1a;
+    background-image: 
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.4) 2px,
+            rgba(0, 0, 0, 0.4) 4px
+        ),
+        repeating-linear-gradient(
+            -45deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.4) 2px,
+            rgba(0, 0, 0, 0.4) 4px
+        ),
+        linear-gradient(
+            180deg,
+            #2a2a2a 0%,
+            #1a1a1a 100%
+        );
+    color: #ffffff;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 20px 0;
+}
+
+header h1 {
+    font-size: 48px;
+    font-weight: 300;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.tagline {
+    font-size: 20px;
+    color: #9cafb8;
+    font-weight: 300;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Content Cards */
+.content-card {
+    background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+    border-radius: 12px;
+    padding: 0;
+    margin: 10px 0;
+    overflow: hidden;
+    border: 2px solid #000000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.content-card h2 {
+    font-size: 24px;
+    font-weight: 400;
+    color: #5eb8e5;
+    margin-bottom: 0;
+    padding: 20px 24px 12px 24px;
+    background: transparent;
+    text-shadow: 0 0 8px rgba(94, 184, 229, 0.5);
+}
+
+.content-card > p,
+.content-card > .device-grid {
+    padding: 0 24px 16px 24px;
+}
+
+.content-card p {
+    font-size: 17px;
+    line-height: 1.6;
+    color: #cccccc;
+    margin-bottom: 8px;
+}
+
+.content-card p:last-child {
+    margin-bottom: 0;
+}
+
+.highlight {
+    color: #5eb8e5;
+    font-weight: 400;
+}
+
+/* Device Grid */
+.device-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 0;
+}
+
+.device-item {
+    background: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 100%);
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 16px;
+    color: #cccccc;
+    border: 1px solid #1a1a1a;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.model-number {
+    display: block;
+    font-size: 13px;
+    color: #777777;
+    margin-top: 4px;
+}
+
+/* CTA Section */
+.cta-section {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+
+/* Buttons */
+.svoice-btn {
+    background: linear-gradient(180deg, #5a5a5a 0%, #3d3d3d 100%);
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 14px 32px;
+    font-size: 18px;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 400;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.svoice-btn:hover {
+    background: linear-gradient(180deg, #6a6a6a 0%, #4d4d4d 100%);
+}
+
+.svoice-btn:active {
+    background: linear-gradient(180deg, #3d3d3d 0%, #2a2a2a 100%);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.btn-large {
+    font-size: 20px;
+    padding: 16px 48px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 60px;
+    padding: 30px 20px;
+    color: #666666;
+    font-size: 14px;
+}
+
+footer p {
+    margin-bottom: 8px;
+}
+
+.footer-links {
+    margin: 12px 0;
+    color: #888888;
+}
+
+.footer-links a {
+    color: #5eb8e5;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+.footer-note {
+    font-size: 12px;
+    color: #555555;
+    margin-top: 12px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    header h1 {
+        font-size: 36px;
+    }
+    
+    .tagline {
+        font-size: 18px;
+    }
+    
+    .content-card {
+        padding: 0;
+    }
+    
+    .content-card h2 {
+        font-size: 20px;
+        padding: 16px 20px 12px 20px;
+    }
+    
+    .content-card > p,
+    .content-card > .device-grid {
+        padding: 0 20px 16px 20px;
+    }
+    
+    .device-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .cta-section {
+        flex-direction: column;
+    }
+    
+    .svoice-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
