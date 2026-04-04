@@ -28,6 +28,12 @@
         <input type="submit" value="Save">
     </form>
 
+    <h2>Upload Image</h2>
+    <form action="/dash/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required>
+        <input type="submit" value="Upload">
+    </form>
+
     <h2>Performance Profiler</h2>
     <table class="stats-table">
         <tr>

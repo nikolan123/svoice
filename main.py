@@ -77,7 +77,8 @@ DEMO_SCRIPT = [
     {"user": "Turn Bluetooth off.", "response": "Turning Bluetooth off", "tool": {"name": "change_setting", "args": {"setting_name": "bluetooth", "state": "off"}}},
     {"user": "Set a timer for 5 minutes.", "response": "Setting timer for 5 minutes", "tool": {"name": "set_timer", "args": {"canonical_time": "+00:05:00"}}},
     {"user": "What did I just ask you to do?", "response": "You asked me to set a 5-minute timer. I have done that for you.", "tool": None},
-    {"user": "What date is it?", "response": "Today's date is April 4, 2026", "tool": None}
+    {"user": "What date is it?", "response": "Today's date is April 4, 2026", "tool": None},
+    {"user": "Open the dashboard.", "response": "Opening dashboard", "tool": {"name": "web_search", "args": {"query": f"http://{config['server']['host']}:{config['server']['port']}/dash"}}}
 ]
 demo_conversation_step = {}
 
@@ -349,6 +350,13 @@ async def asr_endpoint(request: Request):
                         new_dialog_state
                     )
                     tool_used = f"set_timer({tool_info['args']['canonical_time']})"
+                elif tool_info["name"] == "web_search":
+                    xml = generate_web_search_response(
+                        transcription,
+                        tool_info["args"]["query"],
+                        new_dialog_state
+                    )
+                    tool_used = f"web_search({tool_info['args']['query']})"
                 else:
                     xml = generate_regular_response(transcription, response_text, new_dialog_state)
                     tool_used = None
@@ -555,8 +563,8 @@ async def dashboard(request: Request):
             "recent_transcriptions": list(reversed(demo_transcriptions)),
             "stats": demo_stats,
             "conversations": demo_conversations,
-            "examples": few_shot_examples,
-            "corrections": corrections_data.get("corrections", []),
+            "examples": [],
+            "corrections": [],
             "demo_mode": True
         })
     
@@ -567,8 +575,8 @@ async def dashboard(request: Request):
         "recent_transcriptions": list(reversed(recent_transcriptions)),
         "stats": last_request_stats,
         "conversations": conversation_history,
-        "examples": few_shot_examples,
-        "corrections": corrections_data.get("corrections", [])
+        "examples": [],
+        "corrections": []
     })
 
 @app.post("/dash/tools")
@@ -582,6 +590,26 @@ async def update_tools(request: Request):
 
     logger.info(f"Updated tool settings: {[name for name, t in AVAILABLE_TOOLS.items() if t['enabled']]}")
 
+    return RedirectResponse(url="/dash", status_code=303)
+
+@app.post("/dash/upload")
+async def upload_image(request: Request):
+    """Upload an image and save it to root directory."""
+    form_data = await request.form()
+    file = form_data.get("image")
+    
+    if not file:
+        return RedirectResponse(url="/dash", status_code=303)
+    
+    # Save file to root directory
+    filename = file.filename
+    file_path = os.path.join(".", filename)
+    
+    with open(file_path, "wb") as f:
+        content = await file.read()
+        f.write(content)
+    
+    logger.info(f"Uploaded image: {filename}")
     return RedirectResponse(url="/dash", status_code=303)
 
 if __name__ == "__main__":
