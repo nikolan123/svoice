@@ -47,7 +47,8 @@ API Configuration:
 - `api.openai.api_key`: API key for OpenAI-compatible services
 
 Server Configuration:
-- `server.host`: Your local IP address (find with `ifconfig`, `ip addr`, or `ipconfig`)
+- `server.host`: Your local IP address for redirects (find with `ifconfig`, `ip addr`, or `ipconfig`)
+- `server.bind`: Address to bind the server to (default: "0.0.0.0" to accept connections from any interface)
 - `server.port`: Server port (default 5067)
 - `models.llm`: Your model name (e.g., `qwen3:4b-instruct-2507-q4_K_M` for Ollama)
 - `models.whisper`: Whisper model size (tiny/base/small/medium/large)

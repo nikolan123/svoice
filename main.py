@@ -445,4 +445,5 @@ async def update_tools(request: Request):
     return RedirectResponse(url="/dash", status_code=303)
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=config["server"]["port"], reload=True)
+    bind_host = config["server"].get("bind", "0.0.0.0")
+    uvicorn.run("main:app", host=bind_host, port=config["server"]["port"], reload=True)
