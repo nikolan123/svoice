@@ -14,6 +14,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import uvicorn
 from ollama import AsyncClient
+from openai import AsyncOpenAI
 import whisper
 from responsegen import (
     generate_open_app_response,
@@ -38,7 +39,26 @@ with open("config.json", "r") as f:
     config = json.load(f)
 
 whisper_model = None
-ollama_client = AsyncClient()
+api_provider = config.get("api", {}).get("provider", "ollama")
+ollama_client = None
+openai_client = None
+
+# Initialize the appropriate client based on provider
+if api_provider == "ollama":
+    ollama_base_url = config.get("api", {}).get("ollama", {}).get("base_url", "http://localhost:11434")
+    ollama_client = AsyncClient(host=ollama_base_url)
+    logger.info(f"Using Ollama API at {ollama_base_url}")
+elif api_provider == "openai":
+    openai_config = config.get("api", {}).get("openai", {})
+    openai_client = AsyncOpenAI(
+        base_url=openai_config.get("base_url", "http://localhost:8000/v1"),
+        api_key=openai_config.get("api_key", "not-needed")
+    )
+    logger.info(f"Using OpenAI-compatible API at {openai_config.get('base_url')}")
+else:
+    logger.error(f"Unknown API provider: {api_provider}")
+    raise ValueError(f"Unknown API provider: {api_provider}. Use 'ollama' or 'openai'")
+
 recent_queries = deque(maxlen=10) # for web ui logging
 last_request_stats = None  # timing stats for last request
 MAX_HISTORY_MESSAGES = config["options"]["max_history_messages"]
@@ -163,7 +183,7 @@ def add_to_conversation(conv_id: str, user_text: str, assistant_text: str, tool_
     conversation_last_access[conv_id] = datetime.now()
 
 async def ai_response(transcription: str, history: list = None) -> tuple[str, list]:
-    """Get AI response from Ollama"""
+    """Get AI response from configured API provider"""
     tools = get_enabled_tools()
     tools_text = get_tools_description()
 
@@ -179,16 +199,35 @@ async def ai_response(transcription: str, history: list = None) -> tuple[str, li
 
     messages.append({"role": "user", "content": transcription})
 
-    response = await ollama_client.chat(
-        model=config["models"]["llm"],
-        messages=messages,
-        tools=tools if tools else None,
-        think=False,
-        stream=False
-    )
-
-    message = response["message"]
-    return message.get("content", ""), message.get("tool_calls", [])
+    if api_provider == "ollama":
+        response = await ollama_client.chat(
+            model=config["models"]["llm"],
+            messages=messages,
+            tools=tools if tools else None,
+            think=False,
+            stream=False
+        )
+        message = response["message"]
+        return message.get("content", ""), message.get("tool_calls", [])
+    
+    elif api_provider == "openai":
+        response = await openai_client.chat.completions.create(
+            model=config["models"]["llm"],
+            messages=messages,
+            tools=tools if tools else None,
+            stream=False
+        )
+        message = response.choices[0].message
+        tool_calls = []
+        if message.tool_calls:
+            for tc in message.tool_calls:
+                tool_calls.append({
+                    "function": {
+                        "name": tc.function.name,
+                        "arguments": json.loads(tc.function.arguments)
+                    }
+                })
+        return message.content or "", tool_calls
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

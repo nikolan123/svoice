@@ -40,10 +40,19 @@ The current supported actions are opening apps, setting timers, toggling bt/wifi
 
 Open `config.json` and update the settings:
 
+API Configuration:
+- `api.provider`: Choose "ollama" or "openai" for your LLM backend
+- `api.ollama.base_url`: Ollama server URL (default: http://localhost:11434)
+- `api.openai.base_url`: OpenAI-compatible API endpoint (e.g., http://localhost:8000/v1)
+- `api.openai.api_key`: API key for OpenAI-compatible services
+
+Server Configuration:
 - `server.host`: Your local IP address (find with `ifconfig`, `ip addr`, or `ipconfig`)
 - `server.port`: Server port (default 5067)
-- `models.llm`: Your Ollama model name (`qwen3:4b-instruct-2507-q4_K_M`)
+- `models.llm`: Your model name (e.g., `qwen3:4b-instruct-2507-q4_K_M` for Ollama)
 - `models.whisper`: Whisper model size (tiny/base/small/medium/large)
+
+Options:
 - `options.whisper_language`: Language code for transcription ("en", "es", "fr", etc)
 - `options.max_history_messages`: Number of messages to keep in conversation memory
 - `options.conversation_timeout_minutes`: Auto-cleanup inactive conversations

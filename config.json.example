@@ -1,4 +1,14 @@
 {
+  "api": {
+    "provider": "ollama",
+    "ollama": {
+      "base_url": "http://localhost:11434"
+    },
+    "openai": {
+      "base_url": "http://localhost:8000/v1",
+      "api_key": "your-api-key-here"
+    }
+  },
   "models": {
     "llm": "qwen3:4b-instruct-2507-q4_K_M",
     "whisper": "small"
