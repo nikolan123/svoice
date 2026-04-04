@@ -65,6 +65,7 @@ MAX_HISTORY_MESSAGES = config["options"]["max_history_messages"]
 KEEP_AUDIO_FILES = config["options"]["keep_audio_files"]
 WHISPER_LANGUAGE = config["options"]["whisper_language"]
 CONVERSATION_TIMEOUT_MINUTES = config["options"]["conversation_timeout_minutes"]
+FFMPEG_PATH = config["options"].get("ffmpeg_path", "ffmpeg")
 conversation_history = {}
 conversation_last_access = {}  # last access time for each conversation
 
@@ -92,7 +93,7 @@ async def transcribe_audio(audio_data: bytes) -> tuple[str, dict]:
         t0 = time.perf_counter()
         result = await asyncio.to_thread(
             subprocess.run,
-            ['ffmpeg', '-i', speex_file, '-y', wav_file],
+            [FFMPEG_PATH, '-i', speex_file, '-y', wav_file],
             capture_output=True
         )
         stats["ffmpeg_convert"] = time.perf_counter() - t0
@@ -233,6 +234,29 @@ async def ai_response(transcription: str, history: list = None) -> tuple[str, li
 async def lifespan(app: FastAPI):
     """Load and unload Whisper model."""
     global whisper_model
+    
+    # Check ffmpeg availability
+    try:
+        result = subprocess.run(
+            [FFMPEG_PATH, '-version'],
+            capture_output=True,
+            timeout=5,
+            text=True
+        )
+        if result.returncode == 0:
+            version_line = result.stdout.split('\n')[0] if result.stdout else "unknown version"
+            logger.info(f"ffmpeg found: {version_line}")
+        else:
+            logger.error(f"ffmpeg at {FFMPEG_PATH} returned error code {result.returncode}")
+            raise RuntimeError(f"ffmpeg check failed")
+    except FileNotFoundError:
+        logger.error(f"ffmpeg not found at: {FFMPEG_PATH}")
+        raise RuntimeError(f"ffmpeg not found at {FFMPEG_PATH}. Please install ffmpeg or update ffmpeg_path in config.json")
+    except Exception as e:
+        logger.error(f"Failed to check ffmpeg: {e}")
+        raise RuntimeError(f"ffmpeg check failed: {e}")
+    
+    # Load Whisper model
     try:
         whisper_model_name = config["models"]["whisper"]
         logger.info(f"Loading Whisper {whisper_model_name}")

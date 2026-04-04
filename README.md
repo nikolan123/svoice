@@ -57,6 +57,7 @@ Options:
 - `options.max_history_messages`: Number of messages to keep in conversation memory
 - `options.conversation_timeout_minutes`: Auto-cleanup inactive conversations
 - `options.keep_audio_files`: Set to true to keep audio files
+- `options.ffmpeg_path`: Path to ffmpeg binary (default: "ffmpeg" - uses system PATH)
 
 ### Start the proxy server
 
